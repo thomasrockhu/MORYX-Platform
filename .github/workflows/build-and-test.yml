@@ -60,13 +60,13 @@ jobs:
           run: ./Build.ps1 -CoverReport
 
         - name: Codecov
-          run: <(curl -s https://codecov.io/bash -v -f 'artifacts/Tests/*.OpenCover.xml')
+          run: curl -s https://codecov.io/bash | bash -s -- -v -f 'artifacts/Tests/*.OpenCover.xml'
 
         - name: Codecov 2
-          run: <(curl -s https://codecov.io/bash -v -f '**/artifacts/Tests/*.OpenCover.xml')
+          run: curl -s https://codecov.io/bash | bash -s -- -v -f '**/artifacts/Tests/*.OpenCover.xml'
 
         - name: Codecov 3
-          run: <(curl -s https://codecov.io/bash -v -f '*.OpenCover.xml')
+          run: curl -s https://codecov.io/bash | bash -s -- -v -f '*.OpenCover.xml'
   Publish:
     needs: [Test]
     if: ${{ github.event_name == 'push' }}
