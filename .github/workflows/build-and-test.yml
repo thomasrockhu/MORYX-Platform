@@ -4,13 +4,13 @@ name: CI
 
 on:
   push:
-    branches: 
+    branches:
       - dev
     tags:
       - "v*-beta.*"
       - "v*-rc.*"
   pull_request:
-    branches: 
+    branches:
       - dev
 
 env:
@@ -25,10 +25,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
-    
+
     - name: Setup NuGet.exe
       uses: NuGet/setup-nuget@v1.0.2
 
@@ -40,10 +40,10 @@ jobs:
     runs-on: windows-latest
     steps:
         - uses: actions/checkout@v2
-        
+
         - name: Setup MSBuild
           uses: microsoft/setup-msbuild@v1
-        
+
         - name: Setup NuGet.exe
           uses: NuGet/setup-nuget@v1.0.2
 
@@ -60,26 +60,24 @@ jobs:
           run: ./Build.ps1 -CoverReport
 
         - name: Codecov
-          uses: codecov/codecov-action@v1
-          with:
-            files: './artifacts/Tests/*.OpenCover.xml'
+          run: bash <(curl -s https://codecov.io/bash) -v -f 'artifacts/Tests/*.OpenCover.xml'
   Publish:
     needs: [Test]
     if: ${{ github.event_name == 'push' }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
-      
+
       - name: Setup NuGet.exe
         uses: NuGet/setup-nuget@v1.0.2
-  
+
       - name: Set assembly versions
         shell: pwsh
         run: ./Build.ps1 -SetAssemblyVersion
-  
+
       - name: Build
         shell: pwsh
         run: ./Build.ps1 -Build
